@@ -72,7 +72,7 @@ namespace dnSpy.Debugger.DotNet.Mono.Impl.Evaluation {
 			case DmdTypeSignatureKind.Type:
 				if (!engine.TryGetMonoModule(type.Module.GetDebuggerModule() ?? throw new InvalidOperationException(), out var monoModule))
 					throw new InvalidOperationException();
-				Debug.Assert((type.MetadataToken >> 24) == 0x02);
+				Debug.Assert(MDToken.ToTable(type.MetadataToken) == Table.TypeDef);
 				//TODO: This can sometimes crash Unity's old mono fork
 				//TODO: It's possible to resolve types, but it's an internal method and it requires a method in the module
 				TypeMirror? typeMirror = null;
@@ -178,13 +178,7 @@ namespace dnSpy.Debugger.DotNet.Mono.Impl.Evaluation {
 				return false;
 			if (module.Assembly.IsDynamic)
 				return false;
-			switch (MDToken.ToTable(type.MetadataToken)) {
-			case Table.TypeDef:
-			case Table.TypeRef:
-				return true;
-			default:
-				return false;
-			}
+			return true;
 		}
 	}
 }

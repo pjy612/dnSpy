@@ -71,16 +71,17 @@ namespace dnSpy.Roslyn.Debugger.ExpressionCompiler.VisualBasic {
 			GetCompilationState<VisualBasicEvalContextState>(evalInfo, references, out var langDebugInfo, out var method, out var methodToken, out var localVarSigTok, out var state, out var metadataBlocks, out var methodVersion);
 
 			var getMethodDebugInfo = CreateGetMethodDebugInfo(state, langDebugInfo);
-			var evalCtx = EvaluationContext.CreateMethodContext(state.MetadataContext, metadataBlocks, null, getMethodDebugInfo, method.Module.Mvid ?? Guid.Empty, methodToken, methodVersion, langDebugInfo.ILOffset, localVarSigTok);
-			state.MetadataContext = new VisualBasicMetadataContext(evalCtx.Compilation, evalCtx);
 
 			if ((options & DbgEvaluationOptions.RawLocals) == 0) {
+				var evalCtx = EvaluationContext.CreateMethodContext(state.MetadataContext, metadataBlocks, null, getMethodDebugInfo, method.Module.Mvid ?? Guid.Empty, methodToken, methodVersion, langDebugInfo.ILOffset, localVarSigTok);
+				state.MetadataContext = new VisualBasicMetadataContext(evalCtx.Compilation, evalCtx);
+
 				var asmBytes = evalCtx.CompileGetLocals(false, ImmutableArray<Alias>.Empty, out var localsInfo, out var typeName, out var errorMessage);
 				var res = CreateCompilationResult(state, asmBytes, typeName, localsInfo, errorMessage);
 				if (!res.IsError)
 					return res;
 			}
-			return CompileGetLocals(state, method);
+			return CompileGetLocals(state, method, getMethodDebugInfo);
 		}
 
 		public override DbgDotNetCompilationResult CompileExpression(DbgEvaluationInfo evalInfo, DbgModuleReference[] references, DbgDotNetAlias[] aliases, string expression, DbgEvaluationOptions options) {
@@ -143,7 +144,8 @@ namespace dnSpy.Roslyn.Debugger.ExpressionCompiler.VisualBasic {
 
 		public override DbgDotNetCompilationResult CompileTypeExpression(DbgEvaluationInfo evalInfo, DmdType type, DbgModuleReference[] references, DbgDotNetAlias[] aliases, string expression, DbgEvaluationOptions options) {
 			GetTypeCompilationState<VisualBasicEvalContextState>(evalInfo, references, out var state, out var metadataBlocks);
-			var evalCtx = EvaluationContext.CreateTypeContext(state.MetadataContext.Compilation, type.Module.ModuleVersionId, type.MetadataToken);
+			var compilation = metadataBlocks.ToCompilation(moduleVersionId: default, MakeAssemblyReferencesKind.AllAssemblies);
+			var evalCtx = EvaluationContext.CreateTypeContext(compilation, type.Module.ModuleVersionId, type.MetadataToken);
 			return CompileExpressionCore(aliases, expression, options, state, evalCtx, evalInfo.CancellationToken);
 		}
 

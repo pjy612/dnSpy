@@ -29,6 +29,7 @@ using dndbg.COM.CorDebug;
 using dndbg.COM.MetaData;
 using dndbg.DotNet;
 using dndbg.Engine;
+using dnlib.DotNet;
 using dnSpy.Contracts.Debugger;
 using dnSpy.Contracts.Debugger.DotNet.Code;
 using dnSpy.Contracts.Debugger.DotNet.CorDebug;
@@ -249,7 +250,6 @@ namespace dnSpy.Debugger.DotNet.CorDebug.Impl {
 		internal void RaiseModulesRefreshed(DbgModule module) => dbgModuleMemoryRefreshedNotifier.RaiseModulesRefreshed(new[] { module });
 
 		internal DmdDynamicModuleHelperImpl GetDynamicModuleHelper(DnModule dnModule) {
-			Debug.Assert(dnModule.IsDynamic);
 			lock (lockObj) {
 				if (!toDynamicModuleHelper.TryGetValue(dnModule.CorModule, out var helper))
 					toDynamicModuleHelper.Add(dnModule.CorModule, helper = new DmdDynamicModuleHelperImpl(this));
@@ -264,7 +264,7 @@ namespace dnSpy.Debugger.DotNet.CorDebug.Impl {
 			var mdi = exactType.GetMetaDataImport(out uint token);
 			var list = new List<string>(4);
 
-			while ((token & 0x00FFFFFF) != 0) {
+			while (MDToken.ToRID(token) != 0) {
 				var name = MDAPI.GetTypeDefName(mdi, token);
 				if (name is null)
 					break;
@@ -272,12 +272,13 @@ namespace dnSpy.Debugger.DotNet.CorDebug.Impl {
 				token = MDAPI.GetTypeDefEnclosingType(mdi, token);
 			}
 
-			list.Reverse();
-
 			if (list.Count == 0)
 				return null;
 			if (list.Count == 1)
 				return list[0];
+
+			list.Reverse();
+
 			var sb = new StringBuilder();
 			for (int i = 0; i < list.Count; i++) {
 				if (i > 0)
@@ -647,7 +648,7 @@ namespace dnSpy.Debugger.DotNet.CorDebug.Impl {
 			}
 			if (updatedModules is not null) {
 				foreach (var info in updatedModules) {
-					var mdi = info.dnModule.CorModule.GetMetaDataInterface<IMetaDataImport2>();
+					var mdi = info.dnModule.CorModule.GetMetaDataInterface<IMetaDataImport>();
 					var scopeName = MDAPI.GetModuleName(mdi) ?? string.Empty;
 					((DbgCorDebugInternalModuleImpl)info.dbgModule.InternalModule).ReflectionModule!.ScopeName = scopeName;
 				}
@@ -811,8 +812,12 @@ namespace dnSpy.Debugger.DotNet.CorDebug.Impl {
 					else
 						errMsg = dnSpy_Debugger_DotNet_CorDebug_Resources.Error_CouldNotStartDebuggerRequireAdminPrivLvl;
 				}
-				else
-					errMsg = string.Format(dnSpy_Debugger_DotNet_CorDebug_Resources.Error_CouldNotStartDebuggerCheckAccessToFile, options.Filename ?? "<???>", ex.Message);
+				else {
+					string exMessage = ex.Message;
+					if (cex is not null)
+						exMessage += $" (0x{cex.ErrorCode:X8})";
+					errMsg = string.Format(dnSpy_Debugger_DotNet_CorDebug_Resources.Error_CouldNotStartDebuggerCheckAccessToFile, options.Filename ?? "<???>", exMessage);
+				}
 
 				SendMessage(new DbgMessageConnected(errMsg, GetMessageFlags()));
 				return;

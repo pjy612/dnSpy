@@ -1089,6 +1089,15 @@ namespace dnSpy.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Copy Full Name.
+        /// </summary>
+        public static string CopyFullNameCommand {
+            get {
+                return ResourceManager.GetString("CopyFullNameCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Ctrl+C.
         /// </summary>
         public static string CopyKey {
@@ -2900,6 +2909,33 @@ namespace dnSpy.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Ignore this update.
+        /// </summary>
+        public static string InfoBar_IgnoreThisUpdate {
+            get {
+                return ResourceManager.GetString("InfoBar_IgnoreThisUpdate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A new version of dnSpy is available: {0}.
+        /// </summary>
+        public static string InfoBar_NewUpdateAvailable {
+            get {
+                return ResourceManager.GetString("InfoBar_NewUpdateAvailable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Open download page.
+        /// </summary>
+        public static string InfoBar_OpenDownloadPage {
+            get {
+                return ResourceManager.GetString("InfoBar_OpenDownloadPage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Integrate with Windows Explorer.
         /// </summary>
         public static string IntegrateWithWindowsExplorer {
@@ -3683,6 +3719,24 @@ namespace dnSpy.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Reset ignored updates.
+        /// </summary>
+        public static string Options_Misc_Button_ResetIgnoredUpdates {
+            get {
+                return ResourceManager.GetString("Options_Misc_Button_ResetIgnoredUpdates", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Check for updates on startup.
+        /// </summary>
+        public static string Options_Misc_CheckForUpdatesOnStartup {
+            get {
+                return ResourceManager.GetString("Options_Misc_CheckForUpdatesOnStartup", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Use memory mapped I/O.
         /// </summary>
         public static string Options_Misc_UseMmapdIO {
@@ -3904,6 +3958,15 @@ namespace dnSpy.Properties {
         public static string ResourcesFolder {
             get {
                 return ResourceManager.GetString("ResourcesFolder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Restart as Administrator.
+        /// </summary>
+        public static string RestartAsAdministratorCommand {
+            get {
+                return ResourceManager.GetString("RestartAsAdministratorCommand", resourceCulture);
             }
         }
         
