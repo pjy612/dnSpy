@@ -891,13 +891,13 @@ namespace dnSpy.Decompiler.VisualBasic {
 							else {
 								var indexes = aryType.GetLowerBounds();
 								var dims = aryType.GetSizes();
-								if (ShowArrayValueSizes && (uint)indexes.Count == rank && (uint)dims.Count == rank) {
-									for (int i = 0; (uint)i < rank; i++) {
+								if (ShowArrayValueSizes && dims.Count == rank) {
+									for (int i = 0; i < rank; i++) {
 										if (i > 0)
 											WriteCommaSpace();
-										if (i < indexes.Count && indexes[i] == 0)
+										if (i >= indexes.Count || indexes[i] == 0)
 											FormatInt32((int)dims[i]);
-										else if (i < indexes.Count && i < dims.Count) {
+										else {
 											FormatInt32(indexes[i]);
 											OutputWrite("..", BoxedTextColor.Operator);
 											FormatInt32((int)(indexes[i] + dims[i] - 1));
@@ -965,7 +965,7 @@ namespace dnSpy.Decompiler.VisualBasic {
 				case ElementType.Var:
 				case ElementType.MVar:
 					var gsType = Read(type.ElementType == ElementType.Var ? typeGenArgs : methGenArgs, (int)((GenericSig)type).Number);
-					if (gsType is not null)
+					if (gsType is not null && gsType != type)
 						Write(gsType, typeGenArgs, methGenArgs, ref tupleNameIndex, attributeProvider);
 					else {
 						var gp = ((GenericSig)type).GenericParam;
@@ -1104,6 +1104,10 @@ namespace dnSpy.Decompiler.VisualBasic {
 			if (type.GetElementType() == ElementType.ByRef) {
 				type = type.Next;
 				OutputWrite(Keyword_ByRef, BoxedTextColor.Keyword);
+				WriteSpace();
+			}
+			if (pd is not null && pd.CustomAttributes.IsDefined("System.ParamArrayAttribute")) {
+				OutputWrite(Keyword_params, BoxedTextColor.Keyword);
 				WriteSpace();
 			}
 			WriteIdentifier(TypeFormatterUtils.GetName(variable), isLocal ? BoxedTextColor.Local : BoxedTextColor.Parameter);

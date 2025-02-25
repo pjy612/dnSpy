@@ -29,7 +29,7 @@ namespace dnSpy.Roslyn.Internal.SignatureHelp {
 			ISignatureHelpProvider[] providers,
 			int caretPosition,
 			SIGHLP.SignatureHelpTriggerInfo triggerInfo,
-			SignatureHelpOptions options,
+			MemberDisplayOptions options,
 			Document document,
 			CancellationToken cancellationToken) {
 			ISignatureHelpProvider bestProvider = null;
@@ -107,7 +107,7 @@ namespace dnSpy.Roslyn.Internal.SignatureHelp {
 			return items.Items.First();
 		}
 
-		internal struct SignatureHelpSelection {
+		internal readonly struct SignatureHelpSelection {
 			private readonly SignatureHelpItem _selectedItem;
 			private readonly int? _selectedParameter;
 
