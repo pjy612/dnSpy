@@ -556,6 +556,15 @@ namespace dnSpy.AsmEditor.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Close All Framework Assemblies.
+        /// </summary>
+        public static string CloseAllFrameworkAssembliesCommand {
+            get {
+                return ResourceManager.GetString("CloseAllFrameworkAssembliesCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Close All Missing Files.
         /// </summary>
         public static string CloseAllMissingFilesCommand {
@@ -5110,6 +5119,15 @@ namespace dnSpy.AsmEditor.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to _Add MVID Section.
+        /// </summary>
+        public static string SaveModule_AddMVIDSection {
+            get {
+                return ResourceManager.GetString("SaveModule_AddMVIDSection", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to _Add PE Checksum.
         /// </summary>
         public static string SaveModule_AddPECheckSum {
@@ -5370,6 +5388,15 @@ namespace dnSpy.AsmEditor.Properties {
         public static string SaveModule_TablesHeap_ExtraData {
             get {
                 return ResourceManager.GetString("SaveModule_TablesHeap_ExtraData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to _Force Big Columns.
+        /// </summary>
+        public static string SaveModule_TablesHeap_ForceBigColumns {
+            get {
+                return ResourceManager.GetString("SaveModule_TablesHeap_ForceBigColumns", resourceCulture);
             }
         }
         
